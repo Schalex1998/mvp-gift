@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">U2764</string>
+    <string name="fragment_overview_title">Overview</string>
+    <string name="refresh">Refresh</string>
+    <string name="empty_string" />
+    <string name="status_gift_new">New</string>
+    <string name="status_gift_open">Open</string>
+    <string name="status_gift_redeemed">Redeemed</string>
+    <string name="action_gift_open">Open</string>
+    <string name="action_gift_redeem">Redeem</string>
+    <string name="new_gift_name">New Gift</string>
+    <string name="challenge_not_answered">Not answered!</string>
+    <string name="label_status">Status</string>
+    <string name="label_id">ID</string>
+    <string name="label_challenges">Challenges</string>
+    <string name="submit">Submit</string>
+    <string name="redeem_dialog_message">Do you really want to redeem your gift now?</string>
+    <string name="new_gift_description">Open the gift in order to see all details and redeem it! Good luck!</string>
+</resources>

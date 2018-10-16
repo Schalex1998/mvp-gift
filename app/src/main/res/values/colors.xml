@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#ff79b0</color>
+    <color name="divider">#20000000</color>
+    <color name="redeemed_gift">#5A000000</color>
+    <color name="form_icon">#AA000000</color>
+</resources>
