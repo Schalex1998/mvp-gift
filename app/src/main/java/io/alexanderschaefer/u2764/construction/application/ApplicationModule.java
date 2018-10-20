@@ -4,6 +4,7 @@ import android.app.Application;
 
 import dagger.Module;
 import dagger.Provides;
+import io.alexanderschaefer.u2764.view.formatter.FormattedGiftFactory;
 
 @Module
 class ApplicationModule {
@@ -17,5 +18,10 @@ class ApplicationModule {
     @Provides
     Application provideApplication() {
         return application;
+    }
+
+    @Provides
+    FormattedGiftFactory provideFormattedGiftFactory(Application application) {
+        return new FormattedGiftFactory(application);
     }
 }

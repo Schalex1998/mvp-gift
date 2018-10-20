@@ -1,6 +1,5 @@
 package io.alexanderschaefer.u2764.presenter.fragments.implementations;
 
-import android.app.Application;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,12 +17,12 @@ import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.common.DialogUtil;
 import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
-import io.alexanderschaefer.u2764.model.viewmodel.GiftViewModel;
 import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
 import io.alexanderschaefer.u2764.presenter.dialog.implementations.OpenGiftDialog;
 import io.alexanderschaefer.u2764.presenter.fragments.DefaultFragment;
 import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
 import io.alexanderschaefer.u2764.view.ViewFactory;
+import io.alexanderschaefer.u2764.view.formatter.FormattedGiftFactory;
 import io.alexanderschaefer.u2764.view.giftdetailfragmentview.GiftDetailFragmentView;
 
 public class GiftDetailFragment extends DefaultFragment implements GiftDetailFragmentView.GiftDetailFragmentViewListener, GiftManager.GiftManagerListener {
@@ -41,7 +40,7 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     ViewFactory viewFactory;
 
     @Inject
-    Application application;
+    FormattedGiftFactory formattedGiftFactory;
 
     private static final String ARG_ID = "arg_id";
     private GiftDetailFragmentView giftDetailFragmentView;
@@ -123,8 +122,10 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
 
     @Override
     public void onGiftsFetched(List<Gift> gifts) {
-        gift = gifts.get(0);
-        giftDetailFragmentView.bind(new GiftViewModel(gift, application));
+        if (!gifts.isEmpty()) {
+            gift = gifts.get(0);
+            giftDetailFragmentView.bind(formattedGiftFactory.from(gift));
+        }
         giftDetailFragmentView.hideProgress();
         invalidateActionBar();
     }

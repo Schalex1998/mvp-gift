@@ -2,15 +2,16 @@ package io.alexanderschaefer.u2764.model.giftmanager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import io.alexanderschaefer.u2764.common.DefaultEventEmitter;
 import io.alexanderschaefer.u2764.model.pojo.Challenge;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
-import io.alexanderschaefer.u2764.common.DefaultEventEmitter;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -35,8 +36,8 @@ public class GiftManagerMockImpl extends DefaultEventEmitter<GiftManager.GiftMan
             giftState = Gift.GiftState.OPEN;
         else if (state == 2)
             giftState = Gift.GiftState.REDEEMED;
-        Challenge challenge = new Challenge("How old am I?", Stream.of("20", "twenty").collect(toSet()), !answer1.isEmpty(), answer1);
-        Challenge challenge2 = new Challenge("Where do I live?", Stream.of("Germany", "Bruchsal", "BW").collect(toSet()), !answer2.isEmpty(), answer2);
+        Challenge challenge = new Challenge("How old am I?", Stream.of("20", "twenty").collect(toSet()), answer1);
+        Challenge challenge2 = new Challenge("Where do I live?", Stream.of("Germany", "Bruchsal", "BW").collect(toSet()), answer2);
         return new Gift("0", "Lunch", "The food's on me!", Arrays.asList(challenge, challenge2), giftState);
     }
 
@@ -81,7 +82,6 @@ public class GiftManagerMockImpl extends DefaultEventEmitter<GiftManager.GiftMan
                 String answer = answers.get(i);
                 for (String solution : challengeToTry.getAnswers()) {
                     if (answer.toLowerCase().contains(solution.toLowerCase())) {
-                        challengeToTry.setAnswered(true);
                         challengeToTry.setGivenAnswer(answer);
                     }
                 }
@@ -90,7 +90,7 @@ public class GiftManagerMockImpl extends DefaultEventEmitter<GiftManager.GiftMan
 
         boolean open = true;
         for (Challenge challengeToVerify : gift.getChallenges()) {
-            if (!challengeToVerify.isAnswered())
+            if (TextUtils.isEmpty(challengeToVerify.getGivenAnswer()))
                 open = false;
         }
         if (open && gift.getState().equals(Gift.GiftState.NEW)) {

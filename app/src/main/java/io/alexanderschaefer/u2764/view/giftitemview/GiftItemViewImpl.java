@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
-import io.alexanderschaefer.u2764.model.viewmodel.GiftViewModel;
 import io.alexanderschaefer.u2764.view.DefaultEncapsulatedView;
+import io.alexanderschaefer.u2764.view.formatter.FormattedGift;
 
 class GiftItemViewImpl extends DefaultEncapsulatedView<GiftItemView.GiftItemViewListener> implements GiftItemView {
 
@@ -34,7 +34,7 @@ class GiftItemViewImpl extends DefaultEncapsulatedView<GiftItemView.GiftItemView
     }
 
     @Override
-    public void bind(GiftViewModel item) {
+    public void bind(FormattedGift item) {
         buttonAction.setVisibility(View.VISIBLE);
         buttonAction.setText(item.getActionText());
         textViewStatus.setTextColor(getContext().getColor(android.R.color.black));
@@ -45,7 +45,7 @@ class GiftItemViewImpl extends DefaultEncapsulatedView<GiftItemView.GiftItemView
             textViewStatus.setTextColor(getContext().getColor(R.color.redeemed_gift));
             buttonAction.setVisibility(View.GONE);
         }
-        linearLayoutMain.setOnClickListener(v -> forEachListener((listener) -> listener.onGiftSelected(item.getGift())));
-        buttonAction.setOnClickListener(v -> forEachListener((listener) -> listener.onGiftAction(item.getGift())));
+        linearLayoutMain.setOnClickListener(v -> forEachListener((listener) -> listener.onGiftSelected(item)));
+        buttonAction.setOnClickListener(v -> forEachListener((listener) -> listener.onGiftAction(item)));
     }
 }

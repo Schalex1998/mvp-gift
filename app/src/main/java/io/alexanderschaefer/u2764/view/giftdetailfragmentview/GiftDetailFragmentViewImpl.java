@@ -12,8 +12,8 @@ import com.google.android.material.button.MaterialButton;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
-import io.alexanderschaefer.u2764.model.viewmodel.ChallengeViewModel;
-import io.alexanderschaefer.u2764.model.viewmodel.GiftViewModel;
+import io.alexanderschaefer.u2764.view.formatter.FormattedChallenge;
+import io.alexanderschaefer.u2764.view.formatter.FormattedGift;
 import io.alexanderschaefer.u2764.view.DefaultEncapsulatedFragmentView;
 
 public class GiftDetailFragmentViewImpl extends DefaultEncapsulatedFragmentView<GiftDetailFragmentView.GiftDetailFragmentViewListener> implements GiftDetailFragmentView, SwipeRefreshLayout.OnRefreshListener {
@@ -66,7 +66,7 @@ public class GiftDetailFragmentViewImpl extends DefaultEncapsulatedFragmentView<
     }
 
     @Override
-    public void bind(GiftViewModel gift) {
+    public void bind(FormattedGift gift) {
         title = gift.getName();
         buttonAction.setVisibility(View.VISIBLE);
         buttonAction.setText(gift.getActionText());
@@ -78,21 +78,21 @@ public class GiftDetailFragmentViewImpl extends DefaultEncapsulatedFragmentView<
             buttonAction.setVisibility(View.GONE);
 
         linearLayoutChallenges.removeAllViews();
-        for (ChallengeViewModel challengeViewModel : gift.getChallenges()) {
-            addChallengePropertyItem(challengeViewModel);
+        for (FormattedChallenge formattedChallenge : gift.getChallenges()) {
+            addChallengePropertyItem(formattedChallenge);
         }
 
         buttonAction.setOnClickListener(v -> forEachListener(GiftDetailFragmentViewListener::onGiftAction));
     }
 
-    private void addChallengePropertyItem(ChallengeViewModel challengeViewModel) {
+    private void addChallengePropertyItem(FormattedChallenge formattedChallenge) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         if (inflater != null) {
             View view = inflater.inflate(R.layout.generic_property_item, linearLayoutChallenges, false);
             TextView textViewLabel = view.findViewById(R.id.tv_label);
             TextView textViewProperty = view.findViewById(R.id.tv_property);
-            textViewLabel.setText(challengeViewModel.getQuestion());
-            textViewProperty.setText(challengeViewModel.getGivenAnswer());
+            textViewLabel.setText(formattedChallenge.getQuestion());
+            textViewProperty.setText(formattedChallenge.getGivenAnswer());
             linearLayoutChallenges.addView(view);
         }
     }
