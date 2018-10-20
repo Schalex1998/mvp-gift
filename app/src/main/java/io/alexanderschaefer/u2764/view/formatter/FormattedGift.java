@@ -3,7 +3,9 @@ package io.alexanderschaefer.u2764.view.formatter;
 import android.content.Context;
 
 import java.util.List;
+import java.util.Objects;
 
+import androidx.annotation.Nullable;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
 
@@ -59,5 +61,20 @@ public class FormattedGift {
             default:
                 return "";
         }
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof FormattedGift)) {
+            return false;
+        }
+
+        FormattedGift formattedGift = (FormattedGift) o;
+        return Objects.equals(getId(), formattedGift.getId())
+                && Objects.equals(getStatusText(), formattedGift.getStatusText())
+                && getChallenges().containsAll(formattedGift.getChallenges())
+                && formattedGift.getChallenges().containsAll(getChallenges());
     }
 }

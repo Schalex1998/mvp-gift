@@ -21,4 +21,14 @@ public class GiftItemViewSupplier extends DefaultEventEmitter<GiftItemView.GiftI
         itemView.registerListener(listener);
         return itemView;
     }
+
+    @Override
+    public boolean areItemsTheSame(FormattedGift oldItem, FormattedGift newItem) {
+        return oldItem.getId().equalsIgnoreCase(newItem.getId());
+    }
+
+    @Override
+    public boolean areContentsTheSame(FormattedGift oldItem, FormattedGift newItem) {
+        return oldItem.equals(newItem);
+    }
 }

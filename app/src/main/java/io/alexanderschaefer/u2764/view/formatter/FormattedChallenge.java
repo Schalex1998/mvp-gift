@@ -3,6 +3,9 @@ package io.alexanderschaefer.u2764.view.formatter;
 import android.content.Context;
 import android.text.TextUtils;
 
+import java.util.Objects;
+
+import androidx.annotation.Nullable;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.model.pojo.Challenge;
 
@@ -26,5 +29,17 @@ public class FormattedChallenge {
 
     public String getQuestion() {
         return challenge.getQuestion();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof FormattedChallenge)) {
+            return false;
+        }
+
+        FormattedChallenge formattedChallenge = (FormattedChallenge) o;
+        return Objects.equals(getGivenAnswer(), formattedChallenge.getGivenAnswer());
     }
 }
