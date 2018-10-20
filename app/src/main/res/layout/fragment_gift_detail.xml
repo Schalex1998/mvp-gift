@@ -17,26 +17,26 @@
                 android:id="@+id/tv_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="32dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_confirmation_number_black_24dp"
+                    android:drawablePadding="8dp"
                     android:drawableTint="@color/form_icon"
                     android:text="@string/label_id"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
@@ -53,17 +53,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="24dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_flag_black_24dp"
+                    android:drawablePadding="8dp"
                     android:drawableTint="@color/form_icon"
                     android:text="@string/label_status"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
@@ -80,25 +80,25 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="24dp"
-                android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="24dp"
                 android:background="@color/divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_beenhere_black_24dp"
+                    android:drawablePadding="8dp"
                     android:drawableTint="@color/form_icon"
                     android:text="@string/label_challenges"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
@@ -123,9 +123,9 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="32dp" />
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="24dp" />
 
         </LinearLayout>
 

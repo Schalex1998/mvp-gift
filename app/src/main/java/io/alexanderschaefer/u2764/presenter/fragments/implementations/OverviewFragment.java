@@ -6,6 +6,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -59,20 +61,11 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         overviewFragmentView.registerListener(this);
         giftManager.registerListener(this);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
         onRefresh();
     }
 
@@ -100,19 +93,14 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     }
 
     @Override
+    public EncapsulatedFragmentView getEncapsulatedView() {
+        return overviewFragmentView;
+    }
+
+    @Override
     public void onGiftsFetched(List<Gift> gifts) {
         overviewFragmentView.bind(formattedGiftFactory.from(gifts));
         overviewFragmentView.hideProgress();
-    }
-
-    @Override
-    public void onGiftOpened(Gift gift) {
-
-    }
-
-    @Override
-    public EncapsulatedFragmentView getEncapsulatedView() {
-        return overviewFragmentView;
     }
 
     @Override
@@ -127,9 +115,30 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
             dialogManager.showDialogDismissingCurrent(dialogFragment);
         } else if (gift.getState() == Gift.GiftState.OPEN) {
             dialogUtil.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
+                overviewFragmentView.showProgress();
                 giftManager.redeemGift(gift.getId());
-                onRefresh();
             });
         }
+    }
+
+    @Override
+    public void onGiftFetched(Gift gift) {
+
+    }
+
+    @Override
+    public void onGiftManagerError(String error) {
+        overviewFragmentView.hideProgress();
+        Snackbar.make(overviewFragmentView.getRootView(), R.string.gift_manager_error, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onGiftOpened(Gift gift) {
+        onRefresh();
+    }
+
+    @Override
+    public void onGiftRedeemed(Gift gift) {
+        onRefresh();
     }
 }

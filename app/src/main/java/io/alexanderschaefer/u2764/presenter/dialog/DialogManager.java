@@ -1,6 +1,5 @@
 package io.alexanderschaefer.u2764.presenter.dialog;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -20,11 +19,6 @@ public class DialogManager {
         if (fragmentWithDialogTag != null && DialogFragment.class.isAssignableFrom(fragmentWithDialogTag.getClass())) {
             currentlyShownDialog = (DialogFragment) fragmentWithDialogTag;
         }
-    }
-
-    @Nullable
-    public DialogFragment getCurrentlyShownDialog() {
-        return currentlyShownDialog;
     }
 
     public void dismissCurrentlyShownDialog() {

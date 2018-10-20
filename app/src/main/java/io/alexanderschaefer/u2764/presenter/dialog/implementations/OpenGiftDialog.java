@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +24,7 @@ import io.alexanderschaefer.u2764.view.formatter.FormattedGift;
 import io.alexanderschaefer.u2764.view.formatter.FormattedGiftFactory;
 import io.alexanderschaefer.u2764.view.opengiftdialogview.OpenGiftDialogView;
 
-public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManager.GiftManagerListener {
+public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManager.GiftManagerListener, OpenGiftDialogView.OpenGiftDialogViewListener {
 
     private static final String ARG_ID = "arg_id";
 
@@ -104,19 +106,36 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
 
     @Override
     public void onGiftsFetched(List<Gift> gifts) {
-        if (!gifts.isEmpty())
-            openGiftDialogView.bind(formattedGiftFactory.from(gifts.get(0)), true);
+
+    }
+
+    @Override
+    public void onGiftFetched(Gift gift) {
+        openGiftDialogView.bind(formattedGiftFactory.from(gift), true);
         openGiftDialogView.hideProgress();
+    }
+
+    @Override
+    public void onGiftManagerError(String error) {
+        openGiftDialogView.hideProgress();
+        Snackbar.make(openGiftDialogView.getRootView(), R.string.gift_manager_error, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onGiftOpened(Gift gift) {
         FormattedGift formattedGift = formattedGiftFactory.from(gift);
-        openGiftDialogView.bind(formattedGift, false);
-        openGiftDialogView.hideProgress();
 
         if (formattedGift.getState() == Gift.GiftState.OPEN) {
             dialogManager.dismissCurrentlyShownDialog();
+            return;
         }
+
+        openGiftDialogView.bind(formattedGift, false);
+        openGiftDialogView.hideProgress();
+    }
+
+    @Override
+    public void onGiftRedeemed(Gift gift) {
+
     }
 }

@@ -6,6 +6,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -28,16 +30,22 @@ import io.alexanderschaefer.u2764.view.giftdetailfragmentview.GiftDetailFragment
 public class GiftDetailFragment extends DefaultFragment implements GiftDetailFragmentView.GiftDetailFragmentViewListener, GiftManager.GiftManagerListener {
 
     private static final String ARG_ID = "arg_id";
+
     @Inject
     GiftManager giftManager;
+
     @Inject
     DialogUtil dialogUtil;
+
     @Inject
     DialogManager dialogManager;
+
     @Inject
     ViewFactory viewFactory;
+
     @Inject
     FormattedGiftFactory formattedGiftFactory;
+
     private GiftDetailFragmentView giftDetailFragmentView;
     private String id;
     private Gift gift;
@@ -71,11 +79,7 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
         super.onStart();
         giftDetailFragmentView.registerListener(this);
         giftManager.registerListener(this);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
         onRefresh();
     }
 
@@ -97,19 +101,6 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     }
 
     @Override
-    public void onGiftAction() {
-        if (gift.getState() == Gift.GiftState.NEW) {
-            DialogFragment dialogFragment = OpenGiftDialog.newInstance(gift.getId());
-            dialogManager.showDialogDismissingCurrent(dialogFragment);
-        } else if (gift.getState() == Gift.GiftState.OPEN) {
-            dialogUtil.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
-                giftManager.redeemGift(id);
-                onRefresh();
-            });
-        }
-    }
-
-    @Override
     public void onRefresh() {
         giftDetailFragmentView.showProgress();
         giftManager.fetchGift(id);
@@ -117,17 +108,44 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
 
     @Override
     public void onGiftsFetched(List<Gift> gifts) {
-        if (!gifts.isEmpty()) {
-            gift = gifts.get(0);
-            giftDetailFragmentView.bind(formattedGiftFactory.from(gift));
+
+    }
+
+    @Override
+    public void onGiftAction() {
+        if (gift.getState() == Gift.GiftState.NEW) {
+            DialogFragment dialogFragment = OpenGiftDialog.newInstance(gift.getId());
+            dialogManager.showDialogDismissingCurrent(dialogFragment);
+        } else if (gift.getState() == Gift.GiftState.OPEN) {
+            dialogUtil.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
+                giftDetailFragmentView.showProgress();
+                giftManager.redeemGift(id);
+            });
         }
+    }
+
+    @Override
+    public void onGiftFetched(Gift gift) {
+        this.gift = gift;
+        giftDetailFragmentView.bind(formattedGiftFactory.from(gift));
         giftDetailFragmentView.hideProgress();
         invalidateActionBar();
     }
 
     @Override
-    public void onGiftOpened(Gift gift) {
+    public void onGiftManagerError(String error) {
+        giftDetailFragmentView.hideProgress();
+        Snackbar.make(giftDetailFragmentView.getRootView(), R.string.gift_manager_error, Snackbar.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onGiftOpened(Gift gift) {
+        onRefresh();
+    }
+
+    @Override
+    public void onGiftRedeemed(Gift gift) {
+        onRefresh();
     }
 
     @Override

@@ -1,7 +1,5 @@
 package io.alexanderschaefer.u2764.construction.application;
 
-import android.app.Application;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,7 +12,7 @@ class NetworkingModule {
 
     @Singleton
     @Provides
-    GiftManager provideGiftManager(Application application) {
-        return new GiftManagerMockImpl(application);
+    GiftManager provideGiftManager() {
+        return new GiftManagerMockImpl();
     }
 }

@@ -16,4 +16,5 @@
     <string name="submit">Submit</string>
     <string name="redeem_dialog_message">Do you really want to redeem your gift now?</string>
     <string name="new_gift_description">Open the gift in order to see all details and redeem it! Good luck!</string>
+    <string name="gift_manager_error">Error, please check your connection</string>
 </resources>

@@ -17,7 +17,13 @@ public interface GiftManager extends EventEmitter<GiftManager.GiftManagerListene
     interface GiftManagerListener {
         void onGiftsFetched(List<Gift> gifts);
 
+        void onGiftFetched(Gift gift);
+
+        void onGiftManagerError(String error);
+
         void onGiftOpened(Gift gift);
+
+        void onGiftRedeemed(Gift gift);
     }
 }
 

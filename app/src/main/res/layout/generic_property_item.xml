@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    android:layout_marginEnd="24dp"
     android:layout_marginStart="24dp"
+    android:layout_marginEnd="24dp"
+    android:layout_marginBottom="16dp"
     android:orientation="horizontal">
 
     <TextView
@@ -12,16 +12,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:drawablePadding="8dp"
         android:drawableStart="@drawable/ic_help_black_24dp"
+        android:drawablePadding="8dp"
         android:drawableTint="@color/form_icon"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
     <TextView
         android:id="@+id/tv_property"
         android:layout_width="wrap_content"
-        android:layout_marginStart="24dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
 </LinearLayout>
