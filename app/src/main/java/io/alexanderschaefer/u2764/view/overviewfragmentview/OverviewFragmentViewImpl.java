@@ -10,12 +10,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.view.DefaultEncapsulatedFragmentView;
 
-class OverviewFragmentViewImpl extends DefaultEncapsulatedFragmentView<OverviewFragmentView.OverviewFragmentViewListener> implements OverviewFragmentView, SwipeRefreshLayout.OnRefreshListener {
+public class OverviewFragmentViewImpl extends DefaultEncapsulatedFragmentView<OverviewFragmentView.OverviewFragmentViewListener> implements OverviewFragmentView, SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
 
-    OverviewFragmentViewImpl(LayoutInflater inflater, ViewGroup container) {
+    public OverviewFragmentViewImpl(LayoutInflater inflater, ViewGroup container) {
         setRootView(inflater.inflate(R.layout.generic_swipetorefresh_recyclerview, container, false));
         initialize();
 

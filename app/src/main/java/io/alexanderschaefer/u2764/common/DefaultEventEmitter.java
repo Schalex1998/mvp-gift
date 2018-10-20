@@ -1,4 +1,4 @@
-package io.alexanderschaefer.u2764.util;
+package io.alexanderschaefer.u2764.common;
 
 import java.util.HashSet;
 import java.util.Set;

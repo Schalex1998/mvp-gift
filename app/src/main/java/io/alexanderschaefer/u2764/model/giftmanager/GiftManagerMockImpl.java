@@ -10,18 +10,18 @@ import java.util.stream.Stream;
 
 import io.alexanderschaefer.u2764.model.pojo.Challenge;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
-import io.alexanderschaefer.u2764.util.DefaultEventEmitter;
+import io.alexanderschaefer.u2764.common.DefaultEventEmitter;
 
 import static java.util.stream.Collectors.toSet;
 
-class GiftManagerMockImpl extends DefaultEventEmitter<GiftManager.GiftManagerListener> implements GiftManager {
+public class GiftManagerMockImpl extends DefaultEventEmitter<GiftManager.GiftManagerListener> implements GiftManager {
     private static final String SHARED_PREF_KEY = "gift_manager_mock_impl_shared_pref_key";
     private static final String GIVEN_ANSWER_KEY1 = "given_answer_key1";
     private static final String GIVEN_ANSWER_KEY2 = "given_answer_key2";
     private static final String STATE_KEY = "state_key";
     private Context context;
 
-    GiftManagerMockImpl(Context context) {
+    public GiftManagerMockImpl(Context context) {
         this.context = context;
     }
 

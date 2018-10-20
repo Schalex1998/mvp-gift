@@ -16,7 +16,7 @@ import io.alexanderschaefer.u2764.model.viewmodel.ChallengeViewModel;
 import io.alexanderschaefer.u2764.model.viewmodel.GiftViewModel;
 import io.alexanderschaefer.u2764.view.DefaultEncapsulatedFragmentView;
 
-class GiftDetailFragmentViewImpl extends DefaultEncapsulatedFragmentView<GiftDetailFragmentView.GiftDetailFragmentViewListener> implements GiftDetailFragmentView, SwipeRefreshLayout.OnRefreshListener {
+public class GiftDetailFragmentViewImpl extends DefaultEncapsulatedFragmentView<GiftDetailFragmentView.GiftDetailFragmentViewListener> implements GiftDetailFragmentView, SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView textViewDescription;
@@ -27,7 +27,7 @@ class GiftDetailFragmentViewImpl extends DefaultEncapsulatedFragmentView<GiftDet
     private MaterialButton buttonAction;
     private String title = " ";
 
-    GiftDetailFragmentViewImpl(LayoutInflater inflater, ViewGroup container) {
+    public GiftDetailFragmentViewImpl(LayoutInflater inflater, ViewGroup container) {
         setRootView(inflater.inflate(R.layout.fragment_gift_detail, container, false));
         initialize();
 

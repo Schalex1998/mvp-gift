@@ -10,9 +10,10 @@ import android.widget.FrameLayout;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import io.alexanderschaefer.u2764.R;
+import io.alexanderschaefer.u2764.construction.presentation.BaseDialogFragment;
 import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
 
-public abstract class DefaultFullScreenDialog extends DialogFragment {
+public abstract class DefaultFullScreenDialog extends BaseDialogFragment {
 
     public static String TAG = "default_full_screen_dialog";
     private Toolbar toolbar;

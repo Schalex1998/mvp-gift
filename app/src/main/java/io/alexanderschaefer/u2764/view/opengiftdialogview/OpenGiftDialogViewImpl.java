@@ -17,13 +17,13 @@ import io.alexanderschaefer.u2764.model.viewmodel.ChallengeViewModel;
 import io.alexanderschaefer.u2764.model.viewmodel.GiftViewModel;
 import io.alexanderschaefer.u2764.view.DefaultEncapsulatedFragmentView;
 
-class OpenGiftDialogViewImpl extends DefaultEncapsulatedFragmentView<OpenGiftDialogView.OpenGiftDialogViewListener> implements OpenGiftDialogView {
+public class OpenGiftDialogViewImpl extends DefaultEncapsulatedFragmentView<OpenGiftDialogView.OpenGiftDialogViewListener> implements OpenGiftDialogView {
 
     private List<EditText> editTextsChallenge;
     private List<TextInputLayout> textInputLayoutsChallenge;
     private ProgressBar progressBar;
 
-    OpenGiftDialogViewImpl(LayoutInflater inflater, ViewGroup container) {
+    public OpenGiftDialogViewImpl(LayoutInflater inflater, ViewGroup container) {
         setRootView(inflater.inflate(R.layout.dialog_open_gift, container, false));
         initialize();
     }

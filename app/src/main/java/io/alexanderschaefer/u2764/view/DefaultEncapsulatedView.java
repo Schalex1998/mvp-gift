@@ -5,7 +5,7 @@ import android.view.View;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
-import io.alexanderschaefer.u2764.util.DefaultEventEmitter;
+import io.alexanderschaefer.u2764.common.DefaultEventEmitter;
 
 public abstract class DefaultEncapsulatedView<ListenerType> extends DefaultEventEmitter<ListenerType> implements EncapsulatedView {
 

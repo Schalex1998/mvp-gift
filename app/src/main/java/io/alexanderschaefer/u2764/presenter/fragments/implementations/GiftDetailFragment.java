@@ -7,28 +7,39 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+import java.util.Objects;
 
+import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
-import io.alexanderschaefer.u2764.model.giftmanager.GiftManagerFactory;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
 import io.alexanderschaefer.u2764.model.viewmodel.GiftViewModel;
 import io.alexanderschaefer.u2764.presenter.dialog.implementations.OpenGiftDialog;
 import io.alexanderschaefer.u2764.presenter.fragments.DefaultFragment;
-import io.alexanderschaefer.u2764.util.DialogUtil;
+import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
 import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
+import io.alexanderschaefer.u2764.view.ViewFactory;
 import io.alexanderschaefer.u2764.view.giftdetailfragmentview.GiftDetailFragmentView;
-import io.alexanderschaefer.u2764.view.giftdetailfragmentview.GiftDetailFragmentViewFactory;
 
 public class GiftDetailFragment extends DefaultFragment implements GiftDetailFragmentView.GiftDetailFragmentViewListener, GiftManager.GiftManagerListener {
-    private static final String ARG_ID = "arg_id";
 
+    @Inject
+    GiftManager giftManager;
+
+    @Inject
+    DialogManager dialogManager;
+
+    @Inject
+    ViewFactory viewFactory;
+
+    private static final String ARG_ID = "arg_id";
     private GiftDetailFragmentView giftDetailFragmentView;
-    private GiftManager giftManager;
     private String id;
     private Gift gift;
 
-    public static GiftDetailFragment newInstance(String id) {
+    static GiftDetailFragment newInstance(String id) {
         GiftDetailFragment giftDetailFragment = new GiftDetailFragment();
 
         Bundle args = new Bundle();
@@ -41,14 +52,14 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        giftManager = GiftManagerFactory.createInstance(getContext().getApplicationContext());
-        id = getArguments().getString(ARG_ID);
+        getPresentationComponent().inject(this);
+        id = Objects.requireNonNull(getArguments()).getString(ARG_ID);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        giftDetailFragmentView = GiftDetailFragmentViewFactory.createInstance(inflater, container);
+        giftDetailFragmentView = viewFactory.newInstance(GiftDetailFragmentView.class, container);
         return giftDetailFragmentView.getRootView();
     }
 
@@ -87,7 +98,7 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
         if (gift.getState() == Gift.GiftState.NEW) {
             OpenGiftDialog.display(getFragmentManager(), gift.getId());
         } else if (gift.getState() == Gift.GiftState.OPEN) {
-            DialogUtil.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
+            dialogManager.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
                 giftManager.redeemGift(id);
                 onRefresh();
             }, getContext());

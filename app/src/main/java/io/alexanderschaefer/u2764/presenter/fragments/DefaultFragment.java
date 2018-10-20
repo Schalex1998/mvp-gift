@@ -7,12 +7,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import io.alexanderschaefer.u2764.construction.presentation.BaseFragment;
 import io.alexanderschaefer.u2764.presenter.activities.FragmentContainerActivity;
+import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
 
-public abstract class DefaultFragment extends Fragment implements BaseFragment {
+public abstract class DefaultFragment extends BaseFragment {
 
     private FragmentContainerActivity fragmentContainerActivity;
+
+    @Nullable
+    public abstract EncapsulatedFragmentView getEncapsulatedView();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

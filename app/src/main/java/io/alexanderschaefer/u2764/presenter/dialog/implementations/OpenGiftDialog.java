@@ -8,25 +8,30 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.fragment.app.FragmentManager;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
-import io.alexanderschaefer.u2764.model.giftmanager.GiftManagerFactory;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
 import io.alexanderschaefer.u2764.model.viewmodel.GiftViewModel;
 import io.alexanderschaefer.u2764.presenter.dialog.DefaultFullScreenDialog;
 import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
+import io.alexanderschaefer.u2764.view.ViewFactory;
 import io.alexanderschaefer.u2764.view.opengiftdialogview.OpenGiftDialogView;
-import io.alexanderschaefer.u2764.view.opengiftdialogview.OpenGiftDialogViewFactory;
 
 public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManager.GiftManagerListener, OpenGiftDialogView.OpenGiftDialogViewListener {
 
-    public static final String TAG = "open_gift_dialog";
+    private static final String TAG = "open_gift_dialog";
     private static final String ARG_ID = "arg_id";
 
-    private OpenGiftDialogView openGiftDialogView;
+    @Inject
+    GiftManager giftManager;
 
-    private GiftManager giftManager;
+    @Inject
+    ViewFactory viewFactory;
+
+    private OpenGiftDialogView openGiftDialogView;
     private String id;
 
     public static OpenGiftDialog display(FragmentManager fragmentManager, String giftId) {
@@ -41,14 +46,14 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        giftManager = GiftManagerFactory.createInstance(getContext().getApplicationContext());
+        getPresentationComponent().inject(this);
         id = getArguments().getString(ARG_ID);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        openGiftDialogView = OpenGiftDialogViewFactory.createInstance(inflater, container);
+        openGiftDialogView = viewFactory.newInstance(OpenGiftDialogView.class, container);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

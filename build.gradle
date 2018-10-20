@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
@@ -16,6 +16,12 @@ allprojects {
         google()
         jcenter()
     }
+}
+
+
+ext {
+    androidXVersion = '1.0.0'
+    daggerVersion = '2.17'
 }
 
 task clean(type: Delete) {

@@ -2,7 +2,7 @@ package io.alexanderschaefer.u2764.view.overviewfragmentview;
 
 
 import androidx.recyclerview.widget.RecyclerView;
-import io.alexanderschaefer.u2764.util.EventEmitter;
+import io.alexanderschaefer.u2764.common.EventEmitter;
 import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
 import io.alexanderschaefer.u2764.view.ProgressView;
 
