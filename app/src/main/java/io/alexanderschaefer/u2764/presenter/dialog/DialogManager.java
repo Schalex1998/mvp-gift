@@ -1,7 +1,5 @@
 package io.alexanderschaefer.u2764.presenter.dialog;
 
-import android.content.DialogInterface;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.fragment.app.DialogFragment;

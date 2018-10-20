@@ -2,8 +2,8 @@ package io.alexanderschaefer.u2764.model.giftmanager;
 
 import java.util.List;
 
-import io.alexanderschaefer.u2764.model.pojo.Gift;
 import io.alexanderschaefer.u2764.common.EventEmitter;
+import io.alexanderschaefer.u2764.model.pojo.Gift;
 
 public interface GiftManager extends EventEmitter<GiftManager.GiftManagerListener> {
     void fetchGifts();

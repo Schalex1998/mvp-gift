@@ -27,22 +27,17 @@ import io.alexanderschaefer.u2764.view.giftdetailfragmentview.GiftDetailFragment
 
 public class GiftDetailFragment extends DefaultFragment implements GiftDetailFragmentView.GiftDetailFragmentViewListener, GiftManager.GiftManagerListener {
 
+    private static final String ARG_ID = "arg_id";
     @Inject
     GiftManager giftManager;
-
     @Inject
     DialogUtil dialogUtil;
-
     @Inject
     DialogManager dialogManager;
-
     @Inject
     ViewFactory viewFactory;
-
     @Inject
     FormattedGiftFactory formattedGiftFactory;
-
-    private static final String ARG_ID = "arg_id";
     private GiftDetailFragmentView giftDetailFragmentView;
     private String id;
     private Gift gift;

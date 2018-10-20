@@ -12,9 +12,9 @@ import com.google.android.material.button.MaterialButton;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
+import io.alexanderschaefer.u2764.view.DefaultEncapsulatedFragmentView;
 import io.alexanderschaefer.u2764.view.formatter.FormattedChallenge;
 import io.alexanderschaefer.u2764.view.formatter.FormattedGift;
-import io.alexanderschaefer.u2764.view.DefaultEncapsulatedFragmentView;
 
 public class GiftDetailFragmentViewImpl extends DefaultEncapsulatedFragmentView<GiftDetailFragmentView.GiftDetailFragmentViewListener> implements GiftDetailFragmentView, SwipeRefreshLayout.OnRefreshListener {
 
