@@ -22,7 +22,7 @@ import io.alexanderschaefer.u2764.view.formatter.FormattedGift;
 import io.alexanderschaefer.u2764.view.formatter.FormattedGiftFactory;
 import io.alexanderschaefer.u2764.view.opengiftdialogview.OpenGiftDialogView;
 
-public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManager.GiftManagerListener, OpenGiftDialogView.OpenGiftDialogViewListener {
+public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManager.GiftManagerListener {
 
     private static final String ARG_ID = "arg_id";
 
@@ -66,7 +66,6 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
     @Override
     public void onStart() {
         super.onStart();
-        openGiftDialogView.registerListener(this);
         giftManager.registerListener(this);
 
         openGiftDialogView.showProgress();
@@ -76,7 +75,6 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
     @Override
     public void onStop() {
         super.onStop();
-        openGiftDialogView.unregisterListener(this);
         giftManager.unregisterListener(this);
     }
 
@@ -91,10 +89,12 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
     }
 
     private void onSubmit() {
-        openGiftDialogView.showProgress();
         Bundle bundle = openGiftDialogView.getViewState();
-        ArrayList<String> answers = bundle.getStringArrayList(openGiftDialogView.VIEW_STATE_ANSWERS);
-        giftManager.openGift(id, answers);
+        if (bundle != null) {
+            ArrayList<String> answers = bundle.getStringArrayList(openGiftDialogView.VIEW_STATE_ANSWERS);
+            openGiftDialogView.showProgress();
+            giftManager.openGift(id, answers);
+        }
     }
 
     @Override
@@ -118,10 +118,5 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
         if (formattedGift.getState() == Gift.GiftState.OPEN) {
             dialogManager.dismissCurrentlyShownDialog();
         }
-    }
-
-    @Override
-    public void onOpenGift() {
-        openGiftDialogView.showProgress();
     }
 }
