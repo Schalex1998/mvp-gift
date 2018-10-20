@@ -1,6 +1,6 @@
 package io.alexanderschaefer.u2764.construction.application;
 
-import android.content.Context;
+import android.app.Application;
 
 import javax.inject.Singleton;
 
@@ -14,7 +14,7 @@ class NetworkingModule {
 
     @Singleton
     @Provides
-    GiftManager provideGiftManager(Context context) {
-        return new GiftManagerMockImpl(context);
+    GiftManager provideGiftManager(Application application) {
+        return new GiftManagerMockImpl(application);
     }
 }

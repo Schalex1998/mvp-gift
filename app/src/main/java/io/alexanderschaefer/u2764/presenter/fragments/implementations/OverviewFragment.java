@@ -1,5 +1,6 @@
 package io.alexanderschaefer.u2764.presenter.fragments.implementations;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -11,15 +12,17 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import io.alexanderschaefer.u2764.R;
+import io.alexanderschaefer.u2764.common.DialogUtil;
 import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
 import io.alexanderschaefer.u2764.model.viewmodel.GiftViewModel;
 import io.alexanderschaefer.u2764.presenter.adapter.DefaultItemAdapter;
 import io.alexanderschaefer.u2764.presenter.adapter.ItemAdapter;
+import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
 import io.alexanderschaefer.u2764.presenter.dialog.implementations.OpenGiftDialog;
 import io.alexanderschaefer.u2764.presenter.fragments.DefaultFragment;
-import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
 import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
 import io.alexanderschaefer.u2764.view.ViewFactory;
 import io.alexanderschaefer.u2764.view.giftitemview.GiftItemView;
@@ -32,10 +35,16 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     GiftManager giftManager;
 
     @Inject
+    DialogUtil dialogUtil;
+
+    @Inject
     DialogManager dialogManager;
 
     @Inject
     ViewFactory viewFactory;
+
+    @Inject
+    Application application;
 
     private OverviewFragmentView overviewFragmentView;
     private ItemAdapter<GiftViewModel> giftItemAdapter;
@@ -98,7 +107,7 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
 
     @Override
     public void onGiftsFetched(List<Gift> gifts) {
-        giftItemAdapter.setItems(GiftViewModel.from(gifts, getContext()));
+        giftItemAdapter.setItems(GiftViewModel.from(gifts, application));
         overviewFragmentView.hideProgress();
     }
 
@@ -120,12 +129,13 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     @Override
     public void onGiftAction(Gift gift) {
         if (gift.getState() == Gift.GiftState.NEW) {
-            OpenGiftDialog.display(getFragmentManager(), gift.getId());
+            DialogFragment dialogFragment = OpenGiftDialog.newInstance(gift.getId());
+            dialogManager.showDialogDismissingCurrent(dialogFragment);
         } else if (gift.getState() == Gift.GiftState.OPEN) {
-            dialogManager.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
+            dialogUtil.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
                 giftManager.redeemGift(gift.getId());
                 onRefresh();
-            }, getContext());
+            });
         }
     }
 }

@@ -1,7 +1,6 @@
 package io.alexanderschaefer.u2764.construction.application;
 
 import android.app.Application;
-import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,7 +15,7 @@ class ApplicationModule {
     }
 
     @Provides
-    Context provideContext() {
+    Application provideApplication() {
         return application;
     }
 }

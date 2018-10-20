@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import dagger.Module;
 import dagger.Provides;
+import io.alexanderschaefer.u2764.common.DialogUtil;
 import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
 import io.alexanderschaefer.u2764.view.ViewFactory;
 
@@ -24,8 +26,18 @@ public class PresentationModule {
     }
 
     @Provides
-    DialogManager provideDialogManager() {
-        return new DialogManager();
+    FragmentManager provideFragmentManager() {
+        return activity.getSupportFragmentManager();
+    }
+
+    @Provides
+    DialogUtil provideDialogUtil(Context context) {
+        return new DialogUtil(context);
+    }
+
+    @Provides
+    DialogManager provideDialogManager(FragmentManager fragmentManager) {
+        return new DialogManager(fragmentManager);
     }
 
     @Provides
