@@ -16,8 +16,6 @@ import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.common.DialogUtil;
 import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
-import io.alexanderschaefer.u2764.presenter.adapter.DefaultItemAdapter;
-import io.alexanderschaefer.u2764.presenter.adapter.ItemAdapter;
 import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
 import io.alexanderschaefer.u2764.presenter.dialog.implementations.OpenGiftDialog;
 import io.alexanderschaefer.u2764.presenter.fragments.DefaultFragment;
@@ -26,7 +24,6 @@ import io.alexanderschaefer.u2764.view.ViewFactory;
 import io.alexanderschaefer.u2764.view.formatter.FormattedGift;
 import io.alexanderschaefer.u2764.view.formatter.FormattedGiftFactory;
 import io.alexanderschaefer.u2764.view.giftitemview.GiftItemView;
-import io.alexanderschaefer.u2764.view.giftitemview.GiftItemViewSupplier;
 import io.alexanderschaefer.u2764.view.overviewfragmentview.OverviewFragmentView;
 
 public class OverviewFragment extends DefaultFragment implements OverviewFragmentView.OverviewFragmentViewListener, GiftManager.GiftManagerListener, GiftItemView.GiftItemViewListener {
@@ -47,13 +44,11 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     FormattedGiftFactory formattedGiftFactory;
 
     private OverviewFragmentView overviewFragmentView;
-    private ItemAdapter<FormattedGift> giftItemAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPresentationComponent().inject(this);
-        giftItemAdapter = new DefaultItemAdapter<>(new GiftItemViewSupplier(this));
     }
 
     @Override
@@ -66,7 +61,6 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        overviewFragmentView.setAdapter(giftItemAdapter.getAdapter());
     }
 
     @Override
@@ -107,7 +101,7 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
 
     @Override
     public void onGiftsFetched(List<Gift> gifts) {
-        giftItemAdapter.setItems(formattedGiftFactory.from(gifts));
+        overviewFragmentView.bind(formattedGiftFactory.from(gifts));
         overviewFragmentView.hideProgress();
     }
 
