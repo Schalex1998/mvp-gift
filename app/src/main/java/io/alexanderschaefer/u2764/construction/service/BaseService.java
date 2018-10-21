@@ -4,7 +4,7 @@ import android.app.Service;
 
 import androidx.annotation.UiThread;
 import io.alexanderschaefer.u2764.construction.application.ApplicationComponent;
-import io.alexanderschaefer.u2764.construction.application.U2764Application;
+import io.alexanderschaefer.u2764.U2764Application;
 
 public abstract class BaseService extends Service {
 

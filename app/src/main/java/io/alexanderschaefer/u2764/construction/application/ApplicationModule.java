@@ -4,14 +4,14 @@ import android.app.Application;
 
 import dagger.Module;
 import dagger.Provides;
-import io.alexanderschaefer.u2764.view.formatter.FormattedGiftFactory;
+import io.alexanderschaefer.u2764.model.formatter.FormattedGiftFactory;
 
 @Module
-class ApplicationModule {
+public class ApplicationModule {
 
     private final Application application;
 
-    ApplicationModule(Application application) {
+    public ApplicationModule(Application application) {
         this.application = application;
     }
 

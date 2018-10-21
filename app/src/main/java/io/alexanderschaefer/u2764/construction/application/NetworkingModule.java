@@ -4,8 +4,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
-import io.alexanderschaefer.u2764.model.giftmanager.GiftManagerMockImpl;
+import io.alexanderschaefer.u2764.model.network.GiftManager;
+import io.alexanderschaefer.u2764.model.network.GiftManagerMockImpl;
 
 @Module
 class NetworkingModule {

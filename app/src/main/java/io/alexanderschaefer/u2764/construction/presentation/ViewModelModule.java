@@ -13,11 +13,11 @@ import dagger.MapKey;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoMap;
-import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
-import io.alexanderschaefer.u2764.presenter.viewmodel.GiftDetailViewModel;
-import io.alexanderschaefer.u2764.presenter.viewmodel.OpenGiftViewModel;
-import io.alexanderschaefer.u2764.presenter.viewmodel.OverviewViewModel;
-import io.alexanderschaefer.u2764.presenter.viewmodel.ViewModelFactory;
+import io.alexanderschaefer.u2764.model.network.GiftManager;
+import io.alexanderschaefer.u2764.screens.giftdetail.GiftDetailViewModel;
+import io.alexanderschaefer.u2764.screens.opengift.OpenGiftViewModel;
+import io.alexanderschaefer.u2764.screens.overview.OverviewViewModel;
+import io.alexanderschaefer.u2764.screens.common.view.ViewModelFactory;
 
 @Module
 public class ViewModelModule {
