@@ -11,7 +11,7 @@ import io.alexanderschaefer.u2764.construction.service.ServiceModule;
 @Singleton
 @Component(modules = {
         ApplicationModule.class,
-        NetworkingModule.class
+        DataModule.class
 })
 public interface ApplicationComponent {
     PresentationComponent newPresentationComponent(PresentationModule presentationModule);

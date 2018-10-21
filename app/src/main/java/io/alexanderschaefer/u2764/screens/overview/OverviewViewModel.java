@@ -2,74 +2,32 @@ package io.alexanderschaefer.u2764.screens.overview;
 
 import java.util.List;
 
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
-import io.alexanderschaefer.u2764.model.database.Gift;
-import io.alexanderschaefer.u2764.model.network.GiftManager;
+import io.alexanderschaefer.u2764.model.GiftRepository;
+import io.alexanderschaefer.u2764.model.database.GiftWithChallenges;
 
-public class OverviewViewModel extends ViewModel implements GiftManager.GiftManagerListener {
+public class OverviewViewModel extends ViewModel {
 
-    private MutableLiveData<List<Gift>> gifts;
+    private final GiftRepository giftRepository;
+    private LiveData<List<GiftWithChallenges>> gifts;
 
-    private final GiftManager giftManager;
-
-    public OverviewViewModel(GiftManager giftManager) {
-        this.giftManager = giftManager;
-        gifts = new MutableLiveData<>();
-        giftManager.registerListener(this);
+    public OverviewViewModel(GiftRepository giftRepository) {
+        this.giftRepository = giftRepository;
     }
 
-    void fetchGifts() {
-        if (gifts.getValue() == null || gifts.getValue().isEmpty())
-            giftManager.fetchGifts();
-        else {
-            setGifts(gifts.getValue());
+    public void init() {
+        if (this.gifts != null) {
+            return;
         }
+        gifts = giftRepository.getGifts();
     }
 
     void redeemGift(String id) {
-        giftManager.redeemGift(id);
+        // TODO: 21/10/2018 implement
     }
 
-    MutableLiveData<List<Gift>> getGifts() {
+    LiveData<List<GiftWithChallenges>> getGifts() {
         return gifts;
-    }
-
-    private void setGifts(List<Gift> gifts) {
-        this.gifts.setValue(gifts);
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        giftManager.unregisterListener(this);
-    }
-
-    @Override
-    public void onGiftsFetched(List<Gift> gifts) {
-        setGifts(gifts);
-    }
-
-    @Override
-    public void onGiftFetched(Gift gift) {
-    }
-
-    @Override
-    public void onGiftManagerError(String error) {
-        // TODO: 20/10/2018 propagate
-    }
-
-    @Override
-    public void onGiftOpened(Gift gift) {
-    }
-
-    @Override
-    public void onGiftRedeemed(Gift redeemedGift) {
-        List<Gift> giftList = gifts.getValue();
-        if (giftList != null) {
-            giftList.removeIf(gift -> gift.getId().equals(redeemedGift.getId()));
-            giftList.add(redeemedGift);
-            setGifts(giftList);
-        }
     }
 }

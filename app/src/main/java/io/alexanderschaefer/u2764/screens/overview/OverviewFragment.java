@@ -17,15 +17,16 @@ import androidx.lifecycle.ViewModelProviders;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.common.DialogUtil;
 import io.alexanderschaefer.u2764.model.database.Gift;
-import io.alexanderschaefer.u2764.screens.common.dialog.DialogManager;
-import io.alexanderschaefer.u2764.screens.opengift.OpenGiftDialog;
-import io.alexanderschaefer.u2764.screens.common.fragment.DefaultFragment;
-import io.alexanderschaefer.u2764.screens.giftdetail.GiftDetailFragment;
-import io.alexanderschaefer.u2764.screens.common.view.ViewModelFactory;
-import io.alexanderschaefer.u2764.screens.common.view.EncapsulatedFragmentView;
-import io.alexanderschaefer.u2764.screens.ViewFactory;
+import io.alexanderschaefer.u2764.model.database.GiftWithChallenges;
 import io.alexanderschaefer.u2764.model.formatter.FormattedGift;
 import io.alexanderschaefer.u2764.model.formatter.FormattedGiftFactory;
+import io.alexanderschaefer.u2764.screens.ViewFactory;
+import io.alexanderschaefer.u2764.screens.common.dialog.DialogManager;
+import io.alexanderschaefer.u2764.screens.common.fragment.DefaultFragment;
+import io.alexanderschaefer.u2764.screens.common.view.EncapsulatedFragmentView;
+import io.alexanderschaefer.u2764.screens.common.view.ViewModelFactory;
+import io.alexanderschaefer.u2764.screens.giftdetail.GiftDetailFragment;
+import io.alexanderschaefer.u2764.screens.opengift.OpenGiftDialog;
 import io.alexanderschaefer.u2764.screens.overview.giftitemview.GiftItemView;
 import io.alexanderschaefer.u2764.screens.overview.overviewfragmentview.OverviewFragmentView;
 
@@ -62,6 +63,7 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         overviewViewModel = ViewModelProviders.of(this, viewModelFactory).get(OverviewViewModel.class);
+        overviewViewModel.init();
         overviewViewModel.getGifts().observe(this, this::onGiftsFetched);
     }
 
@@ -91,7 +93,7 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     @Override
     public void onRefresh() {
         overviewFragmentView.showProgress();
-        overviewViewModel.fetchGifts();
+        //overviewViewModel.fetchGifts();
     }
 
     @Override
@@ -117,8 +119,8 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
         }
     }
 
-    private void onGiftsFetched(List<Gift> gifts) {
-        overviewFragmentView.bind(formattedGiftFactory.from(gifts));
+    private void onGiftsFetched(List<GiftWithChallenges> gifts) {
+        overviewFragmentView.bind(formattedGiftFactory.fromGiftWithChallenges(gifts));
         overviewFragmentView.hideProgress();
     }
 

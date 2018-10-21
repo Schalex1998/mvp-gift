@@ -13,6 +13,7 @@ import dagger.MapKey;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoMap;
+import io.alexanderschaefer.u2764.model.GiftRepository;
 import io.alexanderschaefer.u2764.model.network.GiftManager;
 import io.alexanderschaefer.u2764.screens.giftdetail.GiftDetailViewModel;
 import io.alexanderschaefer.u2764.screens.opengift.OpenGiftViewModel;
@@ -44,8 +45,8 @@ public class ViewModelModule {
     @Provides
     @IntoMap
     @ViewModelKey(OverviewViewModel.class)
-    ViewModel provideOverviewViewModel(GiftManager giftManager) {
-        return new OverviewViewModel(giftManager);
+    ViewModel provideOverviewViewModel(GiftRepository giftRepository) {
+        return new OverviewViewModel(giftRepository);
     }
 
     @Provides

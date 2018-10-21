@@ -5,7 +5,7 @@ import java.util.Objects;
 import androidx.annotation.UiThread;
 import androidx.fragment.app.Fragment;
 import io.alexanderschaefer.u2764.construction.application.ApplicationComponent;
-import io.alexanderschaefer.u2764.U2764Application;
+import io.alexanderschaefer.u2764.construction.application.U2764Application;
 
 public abstract class BaseFragment extends Fragment {
 

@@ -4,7 +4,7 @@
     package="io.alexanderschaefer.u2764">
 
     <application
-        android:name=".U2764Application"
+        android:name=".construction.application.U2764Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

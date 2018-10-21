@@ -7,13 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import io.alexanderschaefer.u2764.common.DefaultEventEmitter;
 import io.alexanderschaefer.u2764.model.database.Challenge;
 import io.alexanderschaefer.u2764.model.database.Gift;
-
-import static java.util.stream.Collectors.toSet;
 
 public class GiftManagerMockImpl extends DefaultEventEmitter<GiftManager.GiftManagerListener> implements GiftManager {
 
@@ -29,10 +26,10 @@ public class GiftManagerMockImpl extends DefaultEventEmitter<GiftManager.GiftMan
             List<Challenge> challenges = new ArrayList<>();
             int numberOfChallenges = new Random().nextInt(5) + 1;
             for (int j = 0; j < numberOfChallenges; j++) {
-                Challenge challenge = new Challenge("Question" + j, Stream.of("Answer" + j, String.valueOf(j)).collect(toSet()), null);
+                Challenge challenge = new Challenge("Question" + j, String.valueOf(j), null);
                 challenges.add(challenge);
             }
-            Gift gift = new Gift(String.valueOf(i), "Name" + i, "Description" + i, challenges, Gift.GiftState.NEW);
+            Gift gift = new Gift(String.valueOf(i), "Name" + i, "Description" + i, Gift.GiftState.NEW, challenges);
             gifts.put(String.valueOf(i), gift);
         }
     }
@@ -69,10 +66,8 @@ public class GiftManagerMockImpl extends DefaultEventEmitter<GiftManager.GiftMan
             Challenge challengeToTry = gift.getChallenges().get(i);
             if (answers.size() > i && answers.get(i) != null) {
                 String answer = answers.get(i);
-                for (String solution : challengeToTry.getAnswers()) {
-                    if (answer.toLowerCase().contains(solution.toLowerCase())) {
-                        challengeToTry.setGivenAnswer(answer);
-                    }
+                if (answer.toLowerCase().contains(challengeToTry.getAnswer())) {
+                    challengeToTry.setGivenAnswer(answer);
                 }
             }
         }
