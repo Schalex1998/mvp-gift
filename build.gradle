@@ -22,6 +22,7 @@ allprojects {
 ext {
     androidXVersion = '1.0.0'
     daggerVersion = '2.17'
+    lifecycleVersion = '2.0.0'
 }
 
 task clean(type: Delete) {

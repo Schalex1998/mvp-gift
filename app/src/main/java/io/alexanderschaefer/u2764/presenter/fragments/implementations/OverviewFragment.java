@@ -6,21 +6,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.common.DialogUtil;
-import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
 import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
 import io.alexanderschaefer.u2764.presenter.dialog.implementations.OpenGiftDialog;
 import io.alexanderschaefer.u2764.presenter.fragments.DefaultFragment;
+import io.alexanderschaefer.u2764.presenter.viewmodel.OverviewViewModel;
+import io.alexanderschaefer.u2764.presenter.viewmodel.ViewModelFactory;
 import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
 import io.alexanderschaefer.u2764.view.ViewFactory;
 import io.alexanderschaefer.u2764.view.formatter.FormattedGift;
@@ -28,23 +29,20 @@ import io.alexanderschaefer.u2764.view.formatter.FormattedGiftFactory;
 import io.alexanderschaefer.u2764.view.giftitemview.GiftItemView;
 import io.alexanderschaefer.u2764.view.overviewfragmentview.OverviewFragmentView;
 
-public class OverviewFragment extends DefaultFragment implements OverviewFragmentView.OverviewFragmentViewListener, GiftManager.GiftManagerListener, GiftItemView.GiftItemViewListener {
-
-    @Inject
-    GiftManager giftManager;
+public class OverviewFragment extends DefaultFragment implements OverviewFragmentView.OverviewFragmentViewListener, GiftItemView.GiftItemViewListener {
 
     @Inject
     DialogUtil dialogUtil;
-
     @Inject
     DialogManager dialogManager;
-
     @Inject
     ViewFactory viewFactory;
-
     @Inject
     FormattedGiftFactory formattedGiftFactory;
+    @Inject
+    ViewModelFactory viewModelFactory;
 
+    private OverviewViewModel overviewViewModel;
     private OverviewFragmentView overviewFragmentView;
 
     @Override
@@ -61,11 +59,16 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        overviewViewModel = ViewModelProviders.of(this, viewModelFactory).get(OverviewViewModel.class);
+        overviewViewModel.getGifts().observe(this, this::onGiftsFetched);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         overviewFragmentView.registerListener(this);
-        giftManager.registerListener(this);
-
         onRefresh();
     }
 
@@ -83,24 +86,17 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     public void onStop() {
         super.onStop();
         overviewFragmentView.unregisterListener(this);
-        giftManager.unregisterListener(this);
     }
 
     @Override
     public void onRefresh() {
         overviewFragmentView.showProgress();
-        giftManager.fetchGifts();
+        overviewViewModel.fetchGifts();
     }
 
     @Override
     public EncapsulatedFragmentView getEncapsulatedView() {
         return overviewFragmentView;
-    }
-
-    @Override
-    public void onGiftsFetched(List<Gift> gifts) {
-        overviewFragmentView.bind(formattedGiftFactory.from(gifts));
-        overviewFragmentView.hideProgress();
     }
 
     @Override
@@ -116,29 +112,18 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
         } else if (gift.getState() == Gift.GiftState.OPEN) {
             dialogUtil.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
                 overviewFragmentView.showProgress();
-                giftManager.redeemGift(gift.getId());
+                overviewViewModel.redeemGift(gift.getId());
             });
         }
     }
 
-    @Override
-    public void onGiftFetched(Gift gift) {
-
-    }
-
-    @Override
-    public void onGiftManagerError(String error) {
+    private void onGiftsFetched(List<Gift> gifts) {
+        overviewFragmentView.bind(formattedGiftFactory.from(gifts));
         overviewFragmentView.hideProgress();
-        Snackbar.make(overviewFragmentView.getRootView(), R.string.gift_manager_error, Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onGiftOpened(Gift gift) {
-        onRefresh();
-    }
-
-    @Override
-    public void onGiftRedeemed(Gift gift) {
-        onRefresh();
-    }
+//  private void onGiftManagerError(String error) {
+//      overviewFragmentView.hideProgress();
+//      Snackbar.make(overviewFragmentView.getRootView(), R.string.gift_manager_error, Snackbar.LENGTH_SHORT).show();
+//  }
 }

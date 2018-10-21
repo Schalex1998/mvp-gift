@@ -8,7 +8,9 @@ import androidx.fragment.app.FragmentManager;
 import dagger.Module;
 import dagger.Provides;
 import io.alexanderschaefer.u2764.common.DialogUtil;
+import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
 import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
+import io.alexanderschaefer.u2764.presenter.viewmodel.ViewModelFactory;
 import io.alexanderschaefer.u2764.view.ViewFactory;
 
 @Module

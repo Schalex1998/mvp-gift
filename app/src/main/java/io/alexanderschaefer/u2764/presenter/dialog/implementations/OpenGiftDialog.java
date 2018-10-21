@@ -5,43 +5,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import io.alexanderschaefer.u2764.R;
-import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
 import io.alexanderschaefer.u2764.presenter.dialog.DefaultFullScreenDialog;
 import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
+import io.alexanderschaefer.u2764.presenter.viewmodel.OpenGiftViewModel;
+import io.alexanderschaefer.u2764.presenter.viewmodel.ViewModelFactory;
 import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
 import io.alexanderschaefer.u2764.view.ViewFactory;
 import io.alexanderschaefer.u2764.view.formatter.FormattedGift;
 import io.alexanderschaefer.u2764.view.formatter.FormattedGiftFactory;
 import io.alexanderschaefer.u2764.view.opengiftdialogview.OpenGiftDialogView;
 
-public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManager.GiftManagerListener, OpenGiftDialogView.OpenGiftDialogViewListener {
+public class OpenGiftDialog extends DefaultFullScreenDialog {
 
     private static final String ARG_ID = "arg_id";
 
     @Inject
-    GiftManager giftManager;
-
-    @Inject
     ViewFactory viewFactory;
-
     @Inject
     DialogManager dialogManager;
-
     @Inject
     FormattedGiftFactory formattedGiftFactory;
+    @Inject
+    ViewModelFactory viewModelFactory;
 
     private OpenGiftDialogView openGiftDialogView;
-    private String id;
+    private OpenGiftViewModel openGiftViewModel;
+    private String giftId;
+    private boolean initialBinding;
 
     public static OpenGiftDialog newInstance(String giftId) {
         OpenGiftDialog openGiftDialog = new OpenGiftDialog();
@@ -55,7 +54,7 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPresentationComponent().inject(this);
-        id = Objects.requireNonNull(getArguments()).getString(ARG_ID);
+        giftId = Objects.requireNonNull(getArguments()).getString(ARG_ID);
     }
 
     @Override
@@ -66,18 +65,18 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        giftManager.registerListener(this);
-
-        openGiftDialogView.showProgress();
-        giftManager.fetchGift(id);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        openGiftViewModel = ViewModelProviders.of(this, viewModelFactory).get(OpenGiftViewModel.class);
+        openGiftViewModel.getGift().observe(this, this::onGiftFetched);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        giftManager.unregisterListener(this);
+    public void onStart() {
+        super.onStart();
+        initialBinding = true;
+        openGiftDialogView.showProgress();
+        openGiftViewModel.fetchGift(giftId);
     }
 
     @Override
@@ -85,18 +84,8 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
         if (itemId == R.id.action_submit) {
             onSubmit();
             return true;
-        } else {
-            return false;
         }
-    }
-
-    private void onSubmit() {
-        Bundle bundle = openGiftDialogView.getViewState();
-        if (bundle != null) {
-            ArrayList<String> answers = bundle.getStringArrayList(openGiftDialogView.VIEW_STATE_ANSWERS);
-            openGiftDialogView.showProgress();
-            giftManager.openGift(id, answers);
-        }
+        return false;
     }
 
     @Override
@@ -104,25 +93,16 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
         return openGiftDialogView;
     }
 
-    @Override
-    public void onGiftsFetched(List<Gift> gifts) {
-
+    private void onSubmit() {
+        Bundle bundle = openGiftDialogView.getViewState();
+        if (bundle != null) {
+            ArrayList<String> answers = bundle.getStringArrayList(openGiftDialogView.VIEW_STATE_ANSWERS);
+            openGiftDialogView.showProgress();
+            openGiftViewModel.openGift(giftId, answers);
+        }
     }
 
-    @Override
-    public void onGiftFetched(Gift gift) {
-        openGiftDialogView.bind(formattedGiftFactory.from(gift), true);
-        openGiftDialogView.hideProgress();
-    }
-
-    @Override
-    public void onGiftManagerError(String error) {
-        openGiftDialogView.hideProgress();
-        Snackbar.make(openGiftDialogView.getRootView(), R.string.gift_manager_error, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onGiftOpened(Gift gift) {
+    private void onGiftFetched(Gift gift) {
         FormattedGift formattedGift = formattedGiftFactory.from(gift);
 
         if (formattedGift.getState() == Gift.GiftState.OPEN) {
@@ -130,12 +110,13 @@ public class OpenGiftDialog extends DefaultFullScreenDialog implements GiftManag
             return;
         }
 
-        openGiftDialogView.bind(formattedGift, false);
+        openGiftDialogView.bind(formattedGift, initialBinding);
         openGiftDialogView.hideProgress();
+        initialBinding = false;
     }
 
-    @Override
-    public void onGiftRedeemed(Gift gift) {
-
-    }
+//  private void onGiftManagerError(String error) {
+//      openGiftDialogView.hideProgress();
+//      Snackbar.make(openGiftDialogView.getRootView(), R.string.gift_manager_error, Snackbar.LENGTH_SHORT).show();
+//  }
 }

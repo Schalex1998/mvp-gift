@@ -5,7 +5,10 @@ import io.alexanderschaefer.u2764.presenter.dialog.implementations.OpenGiftDialo
 import io.alexanderschaefer.u2764.presenter.fragments.implementations.GiftDetailFragment;
 import io.alexanderschaefer.u2764.presenter.fragments.implementations.OverviewFragment;
 
-@Subcomponent(modules = PresentationModule.class)
+@Subcomponent(modules = {
+        PresentationModule.class,
+        ViewModelModule.class
+})
 public interface PresentationComponent {
 
     void inject(GiftDetailFragment giftDetailFragment);

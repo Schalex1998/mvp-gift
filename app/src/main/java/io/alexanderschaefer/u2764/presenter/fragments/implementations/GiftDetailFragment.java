@@ -6,57 +6,53 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.common.DialogUtil;
-import io.alexanderschaefer.u2764.model.giftmanager.GiftManager;
 import io.alexanderschaefer.u2764.model.pojo.Gift;
 import io.alexanderschaefer.u2764.presenter.dialog.DialogManager;
 import io.alexanderschaefer.u2764.presenter.dialog.implementations.OpenGiftDialog;
 import io.alexanderschaefer.u2764.presenter.fragments.DefaultFragment;
+import io.alexanderschaefer.u2764.presenter.viewmodel.GiftDetailViewModel;
+import io.alexanderschaefer.u2764.presenter.viewmodel.ViewModelFactory;
 import io.alexanderschaefer.u2764.view.EncapsulatedFragmentView;
 import io.alexanderschaefer.u2764.view.ViewFactory;
 import io.alexanderschaefer.u2764.view.formatter.FormattedGiftFactory;
 import io.alexanderschaefer.u2764.view.giftdetailfragmentview.GiftDetailFragmentView;
 
-public class GiftDetailFragment extends DefaultFragment implements GiftDetailFragmentView.GiftDetailFragmentViewListener, GiftManager.GiftManagerListener {
+public class GiftDetailFragment extends DefaultFragment implements GiftDetailFragmentView.GiftDetailFragmentViewListener {
 
     private static final String ARG_ID = "arg_id";
 
     @Inject
-    GiftManager giftManager;
-
-    @Inject
     DialogUtil dialogUtil;
-
     @Inject
     DialogManager dialogManager;
-
     @Inject
     ViewFactory viewFactory;
-
     @Inject
     FormattedGiftFactory formattedGiftFactory;
+    @Inject
+    ViewModelFactory viewModelFactory;
 
+    private GiftDetailViewModel giftDetailViewModel;
     private GiftDetailFragmentView giftDetailFragmentView;
-    private String id;
+
+    private String giftId;
     private Gift gift;
 
     static GiftDetailFragment newInstance(String id) {
         GiftDetailFragment giftDetailFragment = new GiftDetailFragment();
-
         Bundle args = new Bundle();
         args.putString(ARG_ID, id);
         giftDetailFragment.setArguments(args);
-
         return giftDetailFragment;
     }
 
@@ -64,7 +60,7 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPresentationComponent().inject(this);
-        id = Objects.requireNonNull(getArguments()).getString(ARG_ID);
+        giftId = Objects.requireNonNull(getArguments()).getString(ARG_ID);
     }
 
     @Override
@@ -75,11 +71,16 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        giftDetailViewModel = ViewModelProviders.of(this, viewModelFactory).get(GiftDetailViewModel.class);
+        giftDetailViewModel.getGift().observe(this, this::onGiftFetched);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         giftDetailFragmentView.registerListener(this);
-        giftManager.registerListener(this);
-
         onRefresh();
     }
 
@@ -97,18 +98,12 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     public void onStop() {
         super.onStop();
         giftDetailFragmentView.unregisterListener(this);
-        giftManager.unregisterListener(this);
     }
 
     @Override
     public void onRefresh() {
         giftDetailFragmentView.showProgress();
-        giftManager.fetchGift(id);
-    }
-
-    @Override
-    public void onGiftsFetched(List<Gift> gifts) {
-
+        giftDetailViewModel.fetchGift(giftId);
     }
 
     @Override
@@ -119,37 +114,25 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
         } else if (gift.getState() == Gift.GiftState.OPEN) {
             dialogUtil.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
                 giftDetailFragmentView.showProgress();
-                giftManager.redeemGift(id);
+                giftDetailViewModel.redeemGift(giftId);
             });
         }
-    }
-
-    @Override
-    public void onGiftFetched(Gift gift) {
-        this.gift = gift;
-        giftDetailFragmentView.bind(formattedGiftFactory.from(gift));
-        giftDetailFragmentView.hideProgress();
-        invalidateActionBar();
-    }
-
-    @Override
-    public void onGiftManagerError(String error) {
-        giftDetailFragmentView.hideProgress();
-        Snackbar.make(giftDetailFragmentView.getRootView(), R.string.gift_manager_error, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onGiftOpened(Gift gift) {
-        onRefresh();
-    }
-
-    @Override
-    public void onGiftRedeemed(Gift gift) {
-        onRefresh();
     }
 
     @Override
     public EncapsulatedFragmentView getEncapsulatedView() {
         return giftDetailFragmentView;
     }
+
+    private void onGiftFetched(Gift gift) {
+        this.gift = gift;
+        giftDetailFragmentView.bind(formattedGiftFactory.from(gift));
+        giftDetailFragmentView.hideProgress();
+        invalidateActionBar();
+    }
+
+//  private void onGiftManagerError(String error) {
+//      giftDetailFragmentView.hideProgress();
+//      Snackbar.make(giftDetailFragmentView.getRootView(), R.string.gift_manager_error, Snackbar.LENGTH_SHORT).show();
+//  }
 }

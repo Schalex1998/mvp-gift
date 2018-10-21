@@ -75,7 +75,7 @@ public class OpenGiftDialogViewImpl extends DefaultEncapsulatedFragmentView<Open
             } else {
                 if (!initial) {
                     textInputLayoutsChallenge.get(i).setErrorEnabled(true);
-                    textInputLayoutsChallenge.get(i).setError("Falsch!");
+                    textInputLayoutsChallenge.get(i).setError(getContext().getString(R.string.challenge_wrong));
                 }
                 editTextsChallenge.get(i).requestFocus();
             }
