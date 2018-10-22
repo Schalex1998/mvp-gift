@@ -30,16 +30,4 @@ public class FormattedChallenge {
     public String getQuestion() {
         return challenge.getQuestion();
     }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-
-        if (o == this) return true;
-        if (!(o instanceof FormattedChallenge)) {
-            return false;
-        }
-
-        FormattedChallenge formattedChallenge = (FormattedChallenge) o;
-        return Objects.equals(getGivenAnswer(), formattedChallenge.getGivenAnswer());
-    }
 }

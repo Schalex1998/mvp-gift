@@ -71,7 +71,6 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     public void onStart() {
         super.onStart();
         overviewFragmentView.registerListener(this);
-        onRefresh();
     }
 
     @Override
@@ -93,7 +92,7 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     @Override
     public void onRefresh() {
         overviewFragmentView.showProgress();
-        //overviewViewModel.fetchGifts();
+        overviewViewModel.refresh();
     }
 
     @Override
@@ -120,7 +119,7 @@ public class OverviewFragment extends DefaultFragment implements OverviewFragmen
     }
 
     private void onGiftsFetched(List<GiftWithChallenges> gifts) {
-        overviewFragmentView.bind(formattedGiftFactory.fromGiftWithChallenges(gifts));
+        overviewFragmentView.bind(formattedGiftFactory.from(gifts));
         overviewFragmentView.hideProgress();
     }
 

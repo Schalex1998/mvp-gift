@@ -1,6 +1,8 @@
 package io.alexanderschaefer.u2764.construction.application;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import javax.inject.Singleton;
 
@@ -13,8 +15,9 @@ import io.alexanderschaefer.u2764.model.formatter.FormattedGiftFactory;
 public class ApplicationModule {
 
     private final Application application;
+    private static final String DEFAULT_SHARED_PREF = "default_shared_pref";
 
-    public ApplicationModule(Application application) {
+    ApplicationModule(Application application) {
         this.application = application;
     }
 
@@ -30,7 +33,12 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    AppExecutors provideAppExecutors(){
+    AppExecutors provideAppExecutors() {
         return new AppExecutors();
+    }
+
+    @Provides
+    SharedPreferences provideSharedPreferences(Application application) {
+        return application.getSharedPreferences(DEFAULT_SHARED_PREF, Context.MODE_PRIVATE);
     }
 }

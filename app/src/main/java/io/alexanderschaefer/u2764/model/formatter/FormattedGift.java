@@ -62,19 +62,4 @@ public class FormattedGift {
                 return "";
         }
     }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-
-        if (o == this) return true;
-        if (!(o instanceof FormattedGift)) {
-            return false;
-        }
-
-        FormattedGift formattedGift = (FormattedGift) o;
-        return Objects.equals(getId(), formattedGift.getId())
-                && Objects.equals(getStatusText(), formattedGift.getStatusText())
-                && getChallenges().containsAll(formattedGift.getChallenges())
-                && formattedGift.getChallenges().containsAll(getChallenges());
-    }
 }

@@ -10,7 +10,7 @@ public interface OpenGiftDialogView extends ProgressView, EncapsulatedFragmentVi
 
     String VIEW_STATE_ANSWERS = "answers";
 
-    void bind(FormattedGift gift, boolean initial);
+    void bind(FormattedGift gift, boolean showErrors);
 
     interface OpenGiftDialogViewListener {
     }

@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import io.alexanderschaefer.u2764.screens.common.view.ItemView;
 import io.alexanderschaefer.u2764.screens.common.view.ItemViewSupplier;
@@ -22,34 +21,8 @@ public class DefaultItemAdapter<ItemType> extends RecyclerView.Adapter<DefaultIt
 
     @Override
     public void setItems(List<ItemType> newItems) {
-        if (items == null) {
-            items = newItems;
-            notifyDataSetChanged();
-        } else {
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-                @Override
-                public int getOldListSize() {
-                    return items.size();
-                }
-
-                @Override
-                public int getNewListSize() {
-                    return newItems.size();
-                }
-
-                @Override
-                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                    return itemViewSupplier.areItemsTheSame(items.get(oldItemPosition), items.get(newItemPosition));
-                }
-
-                @Override
-                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                    return itemViewSupplier.areContentsTheSame(items.get(oldItemPosition), items.get(newItemPosition));
-                }
-            });
-            items = newItems;
-            diffResult.dispatchUpdatesTo(this);
-        }
+        items = newItems;
+        notifyDataSetChanged();
     }
 
     @Override

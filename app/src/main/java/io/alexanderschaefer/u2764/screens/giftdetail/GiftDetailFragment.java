@@ -17,14 +17,15 @@ import androidx.lifecycle.ViewModelProviders;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.common.DialogUtil;
 import io.alexanderschaefer.u2764.model.database.Gift;
-import io.alexanderschaefer.u2764.screens.common.dialog.DialogManager;
-import io.alexanderschaefer.u2764.screens.opengift.OpenGiftDialog;
-import io.alexanderschaefer.u2764.screens.common.fragment.DefaultFragment;
-import io.alexanderschaefer.u2764.screens.common.view.ViewModelFactory;
-import io.alexanderschaefer.u2764.screens.common.view.EncapsulatedFragmentView;
-import io.alexanderschaefer.u2764.screens.ViewFactory;
+import io.alexanderschaefer.u2764.model.database.GiftWithChallenges;
 import io.alexanderschaefer.u2764.model.formatter.FormattedGiftFactory;
+import io.alexanderschaefer.u2764.screens.ViewFactory;
+import io.alexanderschaefer.u2764.screens.common.dialog.DialogManager;
+import io.alexanderschaefer.u2764.screens.common.fragment.DefaultFragment;
+import io.alexanderschaefer.u2764.screens.common.view.EncapsulatedFragmentView;
+import io.alexanderschaefer.u2764.screens.common.view.ViewModelFactory;
 import io.alexanderschaefer.u2764.screens.giftdetail.giftdetailfragmentview.GiftDetailFragmentView;
+import io.alexanderschaefer.u2764.screens.opengift.OpenGiftDialog;
 
 public class GiftDetailFragment extends DefaultFragment implements GiftDetailFragmentView.GiftDetailFragmentViewListener {
 
@@ -45,7 +46,7 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     private GiftDetailFragmentView giftDetailFragmentView;
 
     private String giftId;
-    private Gift gift;
+    private GiftWithChallenges gift;
 
     public static GiftDetailFragment newInstance(String id) {
         GiftDetailFragment giftDetailFragment = new GiftDetailFragment();
@@ -73,6 +74,7 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         giftDetailViewModel = ViewModelProviders.of(this, viewModelFactory).get(GiftDetailViewModel.class);
+        giftDetailViewModel.init(giftId);
         giftDetailViewModel.getGift().observe(this, this::onGiftFetched);
     }
 
@@ -80,7 +82,6 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     public void onStart() {
         super.onStart();
         giftDetailFragmentView.registerListener(this);
-        onRefresh();
     }
 
     @Override
@@ -102,18 +103,18 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
     @Override
     public void onRefresh() {
         giftDetailFragmentView.showProgress();
-        giftDetailViewModel.fetchGift(giftId);
+        giftDetailViewModel.refresh();
     }
 
     @Override
     public void onGiftAction() {
-        if (gift.getState() == Gift.GiftState.NEW) {
-            DialogFragment dialogFragment = OpenGiftDialog.newInstance(gift.getId());
+        if (gift.getGift().getState() == Gift.GiftState.NEW) {
+            DialogFragment dialogFragment = OpenGiftDialog.newInstance(giftId);
             dialogManager.showDialogDismissingCurrent(dialogFragment);
-        } else if (gift.getState() == Gift.GiftState.OPEN) {
+        } else if (gift.getGift().getState() == Gift.GiftState.OPEN) {
             dialogUtil.showConfirmDialog(getString(R.string.redeem_dialog_message), (dialog, which) -> {
                 giftDetailFragmentView.showProgress();
-                giftDetailViewModel.redeemGift(giftId);
+                giftDetailViewModel.redeemGift();
             });
         }
     }
@@ -123,7 +124,7 @@ public class GiftDetailFragment extends DefaultFragment implements GiftDetailFra
         return giftDetailFragmentView;
     }
 
-    private void onGiftFetched(Gift gift) {
+    private void onGiftFetched(GiftWithChallenges gift) {
         this.gift = gift;
         giftDetailFragmentView.bind(formattedGiftFactory.from(gift));
         giftDetailFragmentView.hideProgress();

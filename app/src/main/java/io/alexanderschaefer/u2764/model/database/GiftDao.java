@@ -13,12 +13,15 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
 @Dao
 public interface GiftDao extends BaseDao<Gift> {
-    
-    @Insert(onConflict = REPLACE)
-    void insert(Challenge challenge);
 
     @Insert(onConflict = REPLACE)
     void insertAll(Challenge... challenges);
+
+    @Query("DELETE FROM gifts")
+    void deleteAllGifts();
+
+    @Query("DELETE FROM challenges")
+    void deleteAllChallenges();
 
     @Transaction
     @Query("SELECT * FROM gifts ORDER BY id ASC")

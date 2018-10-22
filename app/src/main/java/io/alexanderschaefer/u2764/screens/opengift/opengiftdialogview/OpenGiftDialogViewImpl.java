@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.alexanderschaefer.u2764.R;
-import io.alexanderschaefer.u2764.screens.common.view.DefaultEncapsulatedFragmentView;
 import io.alexanderschaefer.u2764.model.formatter.FormattedChallenge;
 import io.alexanderschaefer.u2764.model.formatter.FormattedGift;
+import io.alexanderschaefer.u2764.screens.common.view.DefaultEncapsulatedFragmentView;
 
 public class OpenGiftDialogViewImpl extends DefaultEncapsulatedFragmentView<OpenGiftDialogView.OpenGiftDialogViewListener> implements OpenGiftDialogView {
 
@@ -62,19 +62,19 @@ public class OpenGiftDialogViewImpl extends DefaultEncapsulatedFragmentView<Open
     }
 
     @Override
-    public void bind(FormattedGift gift, boolean initial) {
+    public void bind(FormattedGift gift, boolean showErrors) {
         for (int i = gift.getChallenges().size() - 1; i >= 0; i--) {
             FormattedChallenge formattedChallenge = gift.getChallenges().get(i);
             textInputLayoutsChallenge.get(i).setHint(formattedChallenge.getQuestion());
             textInputLayoutsChallenge.get(i).setVisibility(View.VISIBLE);
             if (formattedChallenge.isAnswered()) {
-                if (!initial) {
+                if (showErrors) {
                     textInputLayoutsChallenge.get(i).setErrorEnabled(false);
                 }
                 editTextsChallenge.get(i).setText(formattedChallenge.getGivenAnswer());
                 editTextsChallenge.get(i).setEnabled(false);
             } else {
-                if (!initial) {
+                if (showErrors) {
                     textInputLayoutsChallenge.get(i).setErrorEnabled(true);
                     textInputLayoutsChallenge.get(i).setError(getContext().getString(R.string.challenge_wrong));
                 }

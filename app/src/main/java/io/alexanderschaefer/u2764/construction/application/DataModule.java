@@ -1,6 +1,7 @@
 package io.alexanderschaefer.u2764.construction.application;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import javax.inject.Singleton;
 
@@ -23,6 +24,7 @@ class DataModule {
         return new GiftManagerMockImpl();
     }
 
+    @Singleton
     @Provides
     GiftDatabase provideGiftDatabase(Application application) {
         return Room.databaseBuilder(application, GiftDatabase.class, "gift_database").build();
@@ -35,7 +37,7 @@ class DataModule {
 
     @Singleton
     @Provides
-    GiftRepository provideGiftRepository(GiftDao giftDao, GiftManager giftManager, AppExecutors appExecutors) {
-        return new GiftRepository(giftDao, giftManager, appExecutors);
+    GiftRepository provideGiftRepository(GiftDao giftDao, GiftManager giftManager, AppExecutors appExecutors, SharedPreferences sharedPreferences) {
+        return new GiftRepository(giftDao, giftManager, appExecutors, sharedPreferences);
     }
 }

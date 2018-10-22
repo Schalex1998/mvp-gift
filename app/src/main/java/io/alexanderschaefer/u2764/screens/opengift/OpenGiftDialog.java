@@ -15,13 +15,14 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import io.alexanderschaefer.u2764.R;
 import io.alexanderschaefer.u2764.model.database.Gift;
-import io.alexanderschaefer.u2764.screens.common.dialog.DefaultFullScreenDialog;
-import io.alexanderschaefer.u2764.screens.common.dialog.DialogManager;
-import io.alexanderschaefer.u2764.screens.common.view.ViewModelFactory;
-import io.alexanderschaefer.u2764.screens.common.view.EncapsulatedFragmentView;
-import io.alexanderschaefer.u2764.screens.ViewFactory;
+import io.alexanderschaefer.u2764.model.database.GiftWithChallenges;
 import io.alexanderschaefer.u2764.model.formatter.FormattedGift;
 import io.alexanderschaefer.u2764.model.formatter.FormattedGiftFactory;
+import io.alexanderschaefer.u2764.screens.ViewFactory;
+import io.alexanderschaefer.u2764.screens.common.dialog.DefaultFullScreenDialog;
+import io.alexanderschaefer.u2764.screens.common.dialog.DialogManager;
+import io.alexanderschaefer.u2764.screens.common.view.EncapsulatedFragmentView;
+import io.alexanderschaefer.u2764.screens.common.view.ViewModelFactory;
 import io.alexanderschaefer.u2764.screens.opengift.opengiftdialogview.OpenGiftDialogView;
 
 public class OpenGiftDialog extends DefaultFullScreenDialog {
@@ -40,7 +41,7 @@ public class OpenGiftDialog extends DefaultFullScreenDialog {
     private OpenGiftDialogView openGiftDialogView;
     private OpenGiftViewModel openGiftViewModel;
     private String giftId;
-    private boolean initialBinding;
+    private boolean hasSubmitted = false;
 
     public static OpenGiftDialog newInstance(String giftId) {
         OpenGiftDialog openGiftDialog = new OpenGiftDialog();
@@ -68,15 +69,8 @@ public class OpenGiftDialog extends DefaultFullScreenDialog {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         openGiftViewModel = ViewModelProviders.of(this, viewModelFactory).get(OpenGiftViewModel.class);
+        openGiftViewModel.init(giftId);
         openGiftViewModel.getGift().observe(this, this::onGiftFetched);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        initialBinding = true;
-        openGiftDialogView.showProgress();
-        openGiftViewModel.fetchGift(giftId);
     }
 
     @Override
@@ -98,11 +92,12 @@ public class OpenGiftDialog extends DefaultFullScreenDialog {
         if (bundle != null) {
             ArrayList<String> answers = bundle.getStringArrayList(openGiftDialogView.VIEW_STATE_ANSWERS);
             openGiftDialogView.showProgress();
-            openGiftViewModel.openGift(giftId, answers);
+            hasSubmitted = true;
+            openGiftViewModel.openGift(answers);
         }
     }
 
-    private void onGiftFetched(Gift gift) {
+    private void onGiftFetched(GiftWithChallenges gift) {
         FormattedGift formattedGift = formattedGiftFactory.from(gift);
 
         if (formattedGift.getState() == Gift.GiftState.OPEN) {
@@ -110,9 +105,8 @@ public class OpenGiftDialog extends DefaultFullScreenDialog {
             return;
         }
 
-        openGiftDialogView.bind(formattedGift, initialBinding);
+        openGiftDialogView.bind(formattedGift, hasSubmitted);
         openGiftDialogView.hideProgress();
-        initialBinding = false;
     }
 
 //  private void onGiftManagerError(String error) {

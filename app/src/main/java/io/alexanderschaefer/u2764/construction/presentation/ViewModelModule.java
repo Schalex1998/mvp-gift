@@ -38,8 +38,8 @@ public class ViewModelModule {
     @Provides
     @IntoMap
     @ViewModelKey(GiftDetailViewModel.class)
-    ViewModel provideGiftDetailViewModel(GiftManager giftManager) {
-        return new GiftDetailViewModel(giftManager);
+    ViewModel provideGiftDetailViewModel(GiftRepository giftRepository) {
+        return new GiftDetailViewModel(giftRepository);
     }
 
     @Provides
@@ -52,7 +52,7 @@ public class ViewModelModule {
     @Provides
     @IntoMap
     @ViewModelKey(OpenGiftViewModel.class)
-    ViewModel provideOpenGiftViewModel(GiftManager giftManager) {
-        return new OpenGiftViewModel(giftManager);
+    ViewModel provideOpenGiftViewModel(GiftRepository giftRepository) {
+        return new OpenGiftViewModel(giftRepository);
     }
 }

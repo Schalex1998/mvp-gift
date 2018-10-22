@@ -24,7 +24,11 @@ public class OverviewViewModel extends ViewModel {
     }
 
     void redeemGift(String id) {
-        // TODO: 21/10/2018 implement
+        giftRepository.redeemGift(id);
+    }
+
+    void refresh() {
+        giftRepository.refreshGifts();
     }
 
     LiveData<List<GiftWithChallenges>> getGifts() {
